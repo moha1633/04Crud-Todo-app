@@ -1,6 +1,7 @@
 <?php
 include('header.php');
 include('dbcon.php');
+
 try {
     if (isset($conn)) {
         $stmt = $conn->prepare("SELECT * FROM `04Crud-Todo-app`");
@@ -31,39 +32,42 @@ try {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Age</th>
+                        <th>Program</th>
+                        <th>Update</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    if (isset($students) && is_array($students)) :
-                        foreach ($students as $student) :
-                    ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($student['id']); ?></td>
-                                <td><?php echo htmlspecialchars($student['first_name']); ?></td>
-                                <td><?php echo htmlspecialchars($student['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($student['age']); ?></td>
-                            </tr>
-                        <?php
-                        endforeach;
-                    else :
-                        ?>
+                <?php
+                if (isset($students) && is_array($students)) :
+                    foreach ($students as $student) :
+                ?>
                         <tr>
-                            <td colspan="4">No students found.</td>
+                            <td><?php echo htmlspecialchars($student['id']); ?></td>
+                            <td><?php echo htmlspecialchars($student['first_name']); ?></td>
+                            <td><?php echo htmlspecialchars($student['last_name']); ?></td>
+                            <td><?php echo htmlspecialchars($student['age']); ?></td>
+                            <td><?php echo htmlspecialchars($student['Program']); ?></td> <!-- Display Program field -->
+                            <td> <a href="update_page_1.php?id=<?php echo $student['id']; ?>" class="btn btn-success" >Update</a></td>
+                            <td> <a href="delete_page.php?id=<?php echo $student['id']; ?>" class="btn btn-danger" >Delete</a></td>
                         </tr>
-                    <?php
-                    endif;
-                    ?>
+                <?php
+                    endforeach;
+                else :
+                ?>
+                        <tr>
+                            <td colspan="7">No students found.</td>
+                        </tr>
+                <?php
+                endif;
+                ?>
                 </tbody>
             </table>
-
-
         </div>
     </div>
 </div>
 
-
- 
+<!-- Rest of your code remains the same -->
 
 <?php 
 if(isset($_GET['message'])){
@@ -74,9 +78,6 @@ if(isset($_GET['insert_msg'])){
     echo "<div class='alert alert-success'>" . $_GET['insert_msg'] . "</div>";
 }
 ?>
-
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -99,10 +100,20 @@ if(isset($_GET['insert_msg'])){
                         <label for="age">Age</label>
                         <input type="text" name="age" class="form-control">
                     </div>
+                    <div class="form-group">
+                        <label for="program">Program</label>
+                        <select name="program" class="form-control">
+                         <option value="Fullstack Developer">Fullstack Developer</option>
+                         <option value="Frontend Developer">Frontend Developer</option>
+                         <option value="Cloud Developer">Cloud Developer</option>
+                         <option value="UX Design Developer">UX Design Developer</option>
+                      <option value="Fullstack.NET Developer">Fullstack.NET Developer</option>
+                      </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success" name=" add_students" value="ADD">ADD</button>
+                    <button type="submit" class="btn btn-success" name="add_students" value="ADD">ADD</button>
                 </div>
             </form>
         </div>
