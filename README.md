@@ -43,10 +43,9 @@ This is a simple CRUD (Create, Read, Update, Delete) application built with PHP 
 
 To monitor and manage the database, follow these steps:
 
-1. Open a new tab and enter `localhost:8000`. This will take you to Adminer.
+1. Open a new tab and enter `localhost:8080`. This will take you to Adminer.
 2. Provide the following credentials:
     - **Server**: `db`
     - **Username**: `root`
     - **Password**: `mariadb`
     - **Database**: `m04Crud-Todo-app`
-3. This page enables you to observe real-time changes reflected on the database.

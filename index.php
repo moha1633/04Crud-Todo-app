@@ -3,19 +3,27 @@ include('header.php');
 include('dbcon.php');
 
 try {
+    // Checking if the database connection is established
     if (isset($conn)) {
+        // Preparing SQL query to select all students' information
         $stmt = $conn->prepare("SELECT id, first_name, last_name, age, program FROM `04Crud-Todo-app`");
+        // Executing the SQL query
         if ($stmt->execute()) {
+            // Fetching all students' data as an associative array
             $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
+            // Throwing an exception if there's an error executing the SQL query
             throw new Exception("Error executing SQL query.");
         }
     } else {
+        // Throwing an exception if the database connection is not established
         throw new Exception("Database connection is not established.");
     }
 } catch (PDOException $e) {
+    // Catching PDOException and displaying error message
     echo "Error: " . $e->getMessage();
 } catch (Exception $e) {
+    // Catching general exception and displaying error message
     echo "Error: " . $e->getMessage();
 }
 ?>
