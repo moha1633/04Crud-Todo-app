@@ -1,37 +1,39 @@
 <?php
-// Start output buffering
+// Starta output buffering
 ob_start();
 
-// Including the database connection file
+// Inkludera filen för databasanslutning
 include('dbcon.php');
 
 if(isset($_POST['add_students'])) {
-    // Get form data
+    // Hämta formulärdata
     $f_name = $_POST['f_name'];
     $l_name = $_POST['l_name'];
     $age = $_POST['age'];
-    $program = $_POST['program'] ?? ''; // Get the program value or set default to empty string
+    $program = $_POST['program'] ?? ''; // Hämta programvärdet eller sätt standard till tom sträng
 
-    // Prepare SQL query for inserting data
+    // Förbered SQL-fråga för att lägga till data
     $stmt = $conn->prepare("INSERT INTO `04Crud-Todo-app` (first_name, last_name, age, Program) VALUES (:f_name, :l_name, :age, :program)");
     
-    // Bind parameters
+    // Binda parametrar
     $stmt->bindParam(':f_name', $f_name);
     $stmt->bindParam(':l_name', $l_name);
     $stmt->bindParam(':age', $age);
     $stmt->bindParam(':program', $program);
 
-    // Execute query
+    // Utför frågan
     if($stmt->execute()){
-        header('location:index.php?insert_msg=Data added successfully');
+        // Om utförandet är framgångsrikt, omdirigera till index-sidan med ett meddelande
+        header('location:index.php?insert_msg=Data added successfull');
     } else {
-        header('location:index.php?message=Error adding data');
+        // Om det uppstår ett fel, omdirigera till index-sidan med ett felmeddelande
+        header('location:index.php?message=Fel vid tillägg av data');
     }
 } elseif(isset($_POST['update_students'])) {
-    // Update data
-
+    // Uppdatera data
+    // Här kommer koden för att uppdatera studentdata att placeras
 }
 
-// Flush the output buffer
+// Töm output buffern
 ob_end_flush();
 ?>
