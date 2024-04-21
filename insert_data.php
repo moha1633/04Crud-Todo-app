@@ -1,4 +1,6 @@
 <?php
+ob_start();  // Start output buffering
+
 include('dbcon.php');
 
 if(isset($_POST['add_students'])) {
@@ -38,4 +40,6 @@ if(isset($_POST['add_students'])) {
         header('location:index.php?message=Error updating data');
     }
 }
+
+ob_end_flush();  // Flush the output buffer
 ?>

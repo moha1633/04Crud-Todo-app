@@ -44,7 +44,7 @@ if(isset($_POST['update_students'])) {
         $stmt->bindParam(':program', $program);
     
         if($stmt->execute()){
-            header('location:index.php?insert_data_msg=Data updated successfully');  // Corrected query parameter name
+            header('location:index.php?update_msg=Data updated successfully');  // Corrected query parameter name
             exit;
         } else {
             throw new Exception("Error updating data.");

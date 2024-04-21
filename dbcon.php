@@ -15,3 +15,4 @@ try {
     exit;  // Exit the script if connection fails
 }
 ?>
+
