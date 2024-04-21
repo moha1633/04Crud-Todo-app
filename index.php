@@ -4,7 +4,7 @@ include('dbcon.php');
 
 try {
     if (isset($conn)) {
-        $stmt = $conn->prepare("SELECT * FROM `04Crud-Todo-app`");
+        $stmt = $conn->prepare("SELECT id, first_name, last_name, age, program FROM `04Crud-Todo-app`");
         if ($stmt->execute()) {
             $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
@@ -23,7 +23,7 @@ try {
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-        <h1 class="text-center bg-secondary text-white p-1 rounded">student form of register</h1>
+            <h1 class="text-center bg-secondary text-white p-1 rounded">Student Registration Form</h1>
             <div class="d-flex justify-content-end mb-3">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Students</button>
             </div>
@@ -49,7 +49,7 @@ try {
                                 <td><?php echo htmlspecialchars($student['first_name']); ?></td>
                                 <td><?php echo htmlspecialchars($student['last_name']); ?></td>
                                 <td><?php echo htmlspecialchars($student['age']); ?></td>
-                                <td><?php echo htmlspecialchars($student['Program']); ?></td>
+                                <td><?php echo htmlspecialchars($student['program']); ?></td>
                                 <td class="text-center">
                                     <div class="dropdown">
                                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton<?php echo $student['id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
@@ -87,20 +87,9 @@ if(isset($_GET['message'])){
 if(isset($_GET['insert_msg'])){
     echo "<div class='alert alert-success'>" . $_GET['insert_msg'] . "</div>";
 }
-?>
-<?php 
-if(isset($_GET['message'])){
-    echo "<div class='alert alert-danger'>" . $_GET['message'] . "</div>";
-}
 
 if(isset($_GET['update_msg'])){
     echo "<div class='alert alert-success'>" . $_GET['update_msg'] . "</div>";
-}
-?>
-
-<?php 
-if(isset($_GET['message'])){
-    echo "<div class='alert alert-danger'>" . $_GET['message'] . "</div>";
 }
 
 if(isset($_GET['delete_msg'])){

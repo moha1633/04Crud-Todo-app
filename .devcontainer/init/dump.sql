@@ -11,7 +11,8 @@ CREATE TABLE `04Crud-Todo-app` (
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `age` int(11) NOT NULL,
+  `program` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
-INSERT INTO `04Crud-Todo-app` (`id`, `first_name`, `last_name`, `age`) VALUES
+INSERT INTO `04Crud-Todo-app` (`id`, `first_name`, `last_name`, `age`, `program`) VALUES
