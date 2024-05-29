@@ -3,27 +3,19 @@ include('header.php');
 include('dbcon.php');
 
 try {
-    // Checking if the database connection is established
     if (isset($conn)) {
-        // Preparing SQL query to select all students' information
-        $stmt = $conn->prepare("SELECT id, first_name, last_name, age, program FROM `04Crud-Todo-app`");
-        // Executing the SQL query
+        $stmt = $conn->prepare("SELECT id, task, description, due_date, completed FROM `todos`");
         if ($stmt->execute()) {
-            // Fetching all students' data as an associative array
-            $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $todos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            // Throwing an exception if there's an error executing the SQL query
             throw new Exception("Error executing SQL query.");
         }
     } else {
-        // Throwing an exception if the database connection is not established
         throw new Exception("Database connection is not established.");
     }
 } catch (PDOException $e) {
-    // Catching PDOException and displaying error message
     echo "Error: " . $e->getMessage();
 } catch (Exception $e) {
-    // Catching general exception and displaying error message
     echo "Error: " . $e->getMessage();
 }
 ?>
@@ -31,55 +23,66 @@ try {
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h1 class="text-center bg-secondary text-white p-1 rounded">Student Registration Form</h1>
             <div class="d-flex justify-content-end mb-3">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Students</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Todo</button>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered mt-2">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Age</th>
-                            <th>Program</th>
+                            <th>Task</th>
+                            <th>Description</th>
+                            <th>Due Date</th>
+                            <th>Completed</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    if (isset($students) && is_array($students)) :
-                        foreach ($students as $student) :
-                    ?>
+                        <?php
+                        if (isset($todos) && is_array($todos)) :
+                            foreach ($todos as $todo) :
+                        ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($todo['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($todo['task']); ?></td>
+                                    <td><?php echo htmlspecialchars($todo['description']); ?></td>
+                                    <td><?php echo htmlspecialchars($todo['due_date']); ?></td>
+                                    <td>
+                                        <form action="mark_complete.php" method="post">
+                                            <input type="hidden" name="todo_id" value="<?php echo $todo['id']; ?>">
+                                            <input type="checkbox" name="completed" value="1" <?php echo $todo['completed'] ? 'checked' : ''; ?> onchange="this.form.submit()">
+                                        </form>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton<?php echo $todo['id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $todo['id']; ?>">
+                                                <li><a class="dropdown-item" style="border-color: green; color: green;" href="update_page.php?id=<?php echo $todo['id']; ?>">Update</a></li>
+                                                <li><a class="dropdown-item" style="border-color: red; color: red;" href="delete_page.php?id=<?php echo $todo['id']; ?>">Delete</a></li>
+                                                <li>
+                                                    <form action="mark_complete.php" method="post" style="display:inline;">
+                                                        <input type="hidden" name="todo_id" value="<?php echo $todo['id']; ?>">
+                                                        <input type="hidden" name="completed" value="1">
+                                                        <button type="submit" class="dropdown-item" style="border-color: blue; color: blue;">Complete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                            endforeach;
+                        else :
+                            ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($student['id']); ?></td>
-                                <td><?php echo htmlspecialchars($student['first_name']); ?></td>
-                                <td><?php echo htmlspecialchars($student['last_name']); ?></td>
-                                <td><?php echo htmlspecialchars($student['age']); ?></td>
-                                <td><?php echo htmlspecialchars($student['program']); ?></td>
-                                <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton<?php echo $student['id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $student['id']; ?>">
-                                            <li><a class="dropdown-item" style="border-color: green; color: green;" href="update_page_1.php?id=<?php echo $student['id']; ?>">Update</a></li>
-                                            <li><a class="dropdown-item" style="border-color: red; color: red;" href="delete_page.php?id=<?php echo $student['id']; ?>">Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
+                                <td colspan="6">No todos found.</td>
                             </tr>
-                    <?php
-                        endforeach;
-                    else :
-                    ?>
-                            <tr>
-                                <td colspan="6">No students found.</td>
-                            </tr>
-                    <?php
-                    endif;
-                    ?>
+                        <?php
+                        endif;
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -87,21 +90,25 @@ try {
     </div>
 </div>
 
-<?php 
-if(isset($_GET['message'])){
+<?php
+if (isset($_GET['message'])) {
     echo "<div class='alert alert-danger'>" . $_GET['message'] . "</div>";
 }
 
-if(isset($_GET['insert_msg'])){
+if (isset($_GET['insert_msg'])) {
     echo "<div class='alert alert-success'>" . $_GET['insert_msg'] . "</div>";
 }
 
-if(isset($_GET['update_msg'])){
+if (isset($_GET['update_msg'])) {
     echo "<div class='alert alert-success'>" . $_GET['update_msg'] . "</div>";
 }
 
-if(isset($_GET['delete_msg'])){
+if (isset($_GET['delete_msg'])) {
     echo "<div class='alert alert-success'>" . $_GET['delete_msg'] . "</div>";
+}
+
+if (isset($_GET['complete_msg'])) {
+    echo "<div class='alert alert-success'>" . $_GET['complete_msg'] . "</div>";
 }
 ?>
 
@@ -110,37 +117,27 @@ if(isset($_GET['delete_msg'])){
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Todo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="insert_data.php" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="f_name">First Name</label>
-                        <input type="text" name="f_name" class="form-control">
+                        <label for="task">Task</label>
+                        <input type="text" name="task" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="l_name">Last Name</label>
-                        <input type="text" name="l_name" class="form-control">
+                        <label for="description">Description</label>
+                        <textarea name="description" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="age">Age</label>
-                        <input type="text" name="age" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="program">Program</label>
-                        <select name="program" class="form-control">
-                            <option value="Fullstack Developer">Fullstack Developer</option>
-                            <option value="Frontend Developer">Frontend Developer</option>
-                            <option value="Cloud Developer">Cloud Developer</option>
-                            <option value="UX Design Developer">UX Design Developer</option>
-                            <option value="Fullstack.NET Developer">Fullstack.NET Developer</option>
-                        </select>
+                        <label for="due_date">Due Date</label>
+                        <input type="date" name="due_date" class="form-control">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success" name="add_students" value="ADD">ADD</button>
+                    <button type="submit" class="btn btn-success" name="add_todo" value="ADD">ADD</button>
                 </div>
             </form>
         </div>
