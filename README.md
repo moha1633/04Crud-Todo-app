@@ -1,12 +1,12 @@
 # CRUD Todo App
 
-This is a simple CRUD (Create, Read, Update, Delete) application built with PHP and MySQL. The application allows you to:
+This is a simple CRUD (Create, complete, Update, Delete) application built with PHP and MySQL. The application allows you to:
 
-- Add new students
-- Update student information
-- Delete students
-- index.php a list of all students records 
-
+- Add new todos
+- view existing todos
+- Delete todos
+- Mark todos as complete
+- update todos 
 ## Files and Structure
 
 - `index.php`: Displays a table with all student records and provides options to add, update, and delete records.
