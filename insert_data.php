@@ -1,39 +1,24 @@
 <?php
-// Starta output buffering
 ob_start();
-
-// Inkludera filen för databasanslutning
 include('dbcon.php');
 
-if(isset($_POST['add_students'])) {
-    // Hämta formulärdata
-    $f_name = $_POST['f_name'];
-    $l_name = $_POST['l_name'];
-    $age = $_POST['age'];
-    $program = $_POST['program'] ?? ''; // Hämta programvärdet eller sätt standard till tom sträng
+if(isset($_POST['add_todo'])) {
+    $task = $_POST['task'];
+    $description = $_POST['description'];
+    $due_date = $_POST['due_date'];
+    $completed = 0; // Default to not completed
 
-    // Förbered SQL-fråga för att lägga till data
-    $stmt = $conn->prepare("INSERT INTO `04Crud-Todo-app` (first_name, last_name, age, Program) VALUES (:f_name, :l_name, :age, :program)");
-    
-    // Binda parametrar
-    $stmt->bindParam(':f_name', $f_name);
-    $stmt->bindParam(':l_name', $l_name);
-    $stmt->bindParam(':age', $age);
-    $stmt->bindParam(':program', $program);
+    $stmt = $conn->prepare("INSERT INTO `todos` (task, description, due_date, completed) VALUES (:task, :description, :due_date, :completed)");
+    $stmt->bindParam(':task', $task);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':due_date', $due_date);
+    $stmt->bindParam(':completed', $completed);
 
-    // Utför frågan
     if($stmt->execute()){
-        // Om utförandet är framgångsrikt, omdirigera till index-sidan med ett meddelande
-        header('location:index.php?insert_msg=Data added successfull');
+        header('Location: index.php?insert_msg=Todo added successfully');
     } else {
-        // Om det uppstår ett fel, omdirigera till index-sidan med ett felmeddelande
-        header('location:index.php?message=Fel vid tillägg av data');
+        header('Location: index.php?message=Error adding todo');
     }
-} elseif(isset($_POST['update_students'])) {
-    // Uppdatera data
-    // Här kommer koden för att uppdatera studentdata att placeras
 }
-
-// Töm output buffern
 ob_end_flush();
 ?>
