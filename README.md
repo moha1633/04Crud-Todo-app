@@ -49,5 +49,5 @@ To monitor and manage the database, follow these steps:
 2. Provide the following credentials:
     - **Server**: `db`
     - **Username**: `root`
-    - **Password**: `mariadb`
+    - **Password**: ``
     - **Database**: `m04Crud-Todo-app`
